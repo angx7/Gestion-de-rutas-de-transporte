@@ -1,5 +1,8 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.Stack;
 
 public class GrafoNoDirigido {
     // private ArrayList<ArrayList<String>> listaAdyacencia;
@@ -114,47 +117,46 @@ public class GrafoNoDirigido {
         }
     }
 
-    private void dfs(String verticeInicio) throws Exception {
+    public void dfs(String verticeInicio) {
         boolean[] visitado = new boolean[numVertices];
-        int indiceInicio = buscarIndice(verticeInicio);
-        if (indiceInicio == -1) {
-            throw new Exception(" no se encontró la ciudad: " + verticeInicio);
-        }
-        System.out.println("\nRecorrido DFS desde el origen " + verticeInicio + ":");
-        dfsRecursivo(indiceInicio, visitado);
-    }
+        Stack<String> stack = new Stack<>();
+        stack.push(verticeInicio);
 
-    private void dfsRecursivo(int indiceVertice, boolean[] visitado) {
-        visitado[indiceVertice] = true;
-        System.out.print(listaAdyacencia.get(indiceVertice).getId() + " ");
+        while (!stack.isEmpty()) {
+            String vertice = stack.pop();
+            int indiceVertice = buscarIndice(vertice);
 
-        for (NodoGrafo nodo : listaAdyacencia.get(indiceVertice).getAdyacentes()) {
-            int indice = buscarIndice(nodo.getId());
-            if (!visitado[indice]) {
-                dfsRecursivo(indice, visitado);
+            if (!visitado[indiceVertice]) {
+                visitado[indiceVertice] = true;
+                System.out.print(vertice + " ");
+
+                for (NodoGrafo nodo : listaAdyacencia.get(indiceVertice).getAdyacentes()) {
+                    if (!visitado[buscarIndice(nodo.getId())]) {
+                        stack.push(nodo.getId());
+                    }
+                }
             }
         }
     }
 
-    private void bfs(String verticeInicio) throws Exception {
+    public void bfs(String verticeInicio) {
         boolean[] visitado = new boolean[numVertices];
-        int indiceInicio = buscarIndice(verticeInicio);
-        if (indiceInicio == -1) {
-            throw new Exception(" no se encontró la ciudad: " + verticeInicio);
-        }
-        System.out.println("\nRecorrido BFS desde el origen " + verticeInicio + ":");
-        bfsRecursivo(indiceInicio, visitado);
+        Queue<String> queue = new LinkedList<>();
+        queue.add(verticeInicio);
 
-    }
+        while (!queue.isEmpty()) {
+            String vertice = queue.poll();
+            int indiceVertice = buscarIndice(vertice);
 
-    private void bfsRecursivo(int indiceVertice, boolean[] visitado) {
-        visitado[indiceVertice] = true;
-        System.out.print(listaAdyacencia.get(indiceVertice).getId() + " ");
+            if (!visitado[indiceVertice]) {
+                visitado[indiceVertice] = true;
+                System.out.print(vertice + " ");
 
-        for (NodoGrafo nodo : listaAdyacencia.get(indiceVertice).getAdyacentes()) {
-            int indice = buscarIndice(nodo.getId());
-            if (!visitado[indice]) {
-                bfsRecursivo(indice, visitado);
+                for (NodoGrafo nodo : listaAdyacencia.get(indiceVertice).getAdyacentes()) {
+                    if (!visitado[buscarIndice(nodo.getId())]) {
+                        queue.add(nodo.getId());
+                    }
+                }
             }
         }
     }
