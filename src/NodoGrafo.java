@@ -11,11 +11,11 @@ public class NodoGrafo {
     }
 
     // Getters y setters
-    public String getId() {
+    public String getDestino() {
         return destino;
     }
 
-    public void setId(String destino) {
+    public void setDestino(String destino) {
         this.destino = destino;
     }
 

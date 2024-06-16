@@ -28,7 +28,7 @@ public class ArbolBinario {
         return buscarRec(raiz, palabra) != null;
     }
 
-    public NodoArbol buscarRec(NodoArbol raiz, String palabra) {
+    private NodoArbol buscarRec(NodoArbol raiz, String palabra) {
         if (raiz == null || raiz.palabra.equals(palabra)) {
             return raiz;
         }

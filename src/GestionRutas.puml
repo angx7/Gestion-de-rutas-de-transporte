@@ -1,5 +1,76 @@
 @startuml GestionRutas
 class ArbolBinario{
-    
+    - raiz : NodoArbol
+    + ArbolBinario()
+    + insertar(palabra : String) : void
+    - insertarRec(raiz : NodoArbol, palabra : String) : NodoArbol
+    + buscar(palabra : String) : boolean
+    - buscarRec(raiz : NodoArbol, palabra : String) : NodoArbol
+    + eliminar(palabra : String) : void
+    - eliminarRec(raiz : NodoArbol, palabra : String) : NodoArbol
+    - minimoValor(raiz : NodoArbol) : String
+    + recorrerInOrden() : void
+    - recorrerInOrdenRec(raiz : NodoArbol) : void
+    + recorrerPreOrden() : void
+    - recorrerPreOrdenRec(raiz : NodoArbol) : void
+    + recorrerPostOrden() : void
+    - recorrerPostOrdenRec(raiz : NodoArbol) : void
 }
+
+class GestionRutas{
+    - scanner : Scanner
+    - nombreCiudad : String
+    - origen : String
+    - destino : String
+    + main (String[] args) : void 
+    + mostrarMenu() : void 
+}
+
+class OpcionInvalidaException {
+    + OpcionInvalidaException(mensaje : String)
+}
+
+class GrafoNoDirigido{
+    - numVertices : int
+    - cabeza : NodoGrafo
+    - listaAdyacencia : List<NodoGrafo>
+    + GrafoNoDirigido(tamañoInicial : int)
+    + agregarVertice(nombreVertice : String) : void
+    + buscarIndice(nombreVertice : String) : int
+    + buscarCamino(origen : String, destino : String) : int
+    + agregarArista(origen : String, destino : String) : void
+    + eliminarVertice(nombreVertice : String) : void
+    + eliminarArista(origen : String, destino : String) : void
+    + realizarRecorridos(verticeInicio : String) : void
+    - dfs(verticeInicio : String) : void
+    - bfs(verticeInicio : String) : void
+}
+
+class Exception{
+    + Exception(mensaje : String)
+}
+
+class NodoArbol{
+    - palabra : String
+    - izquierda : NodoArbol
+    - derecha : NodoArbol
+    + NodoArbol(palabra : String)
+}
+
+class NodoGrafo{
+    - destino : String
+    - adyacentes : List<NodoGrafo>
+    + NodoGrafo(destino : String, siguiente : NodoGrafo)
+    + getDestino() : String
+    + setDestino(destino : String) : void
+    + getAdyacentes() : List<NodoGrafo>
+    + setAdyacentes(adyacentes : List<NodoGrafo) : void
+}   
+
+GestionRutas --> OpcionInvalidaException : lanza
+GrafoNoDirigido --> Exception : lanza
+GestionRutas ..> GrafoNoDirigido : > crea
+GestionRutas ..> ArbolBinario : > crea
+ArbolBinario *-- NodoArbol
+GrafoNoDirigido *-- NodoGrafo 
 @enduml

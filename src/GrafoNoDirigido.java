@@ -39,7 +39,7 @@ public class GrafoNoDirigido {
 
     public int buscarIndice(String nombreVertice) {
         for (int i = 0; i < numVertices; i++) {
-            if (i < listaAdyacencia.size() && listaAdyacencia.get(i).getId().equals(nombreVertice)) {
+            if (i < listaAdyacencia.size() && listaAdyacencia.get(i).getDestino().equals(nombreVertice)) {
                 return i;
             }
         }
@@ -55,7 +55,7 @@ public class GrafoNoDirigido {
         }
 
         for (NodoGrafo nodo : listaAdyacencia.get(indiceOrigen).getAdyacentes()) {
-            if (nodo.getId().equals(destino)) {
+            if (nodo.getDestino().equals(destino)) {
                 return 1;
             }
         }
@@ -99,7 +99,7 @@ public class GrafoNoDirigido {
             listaAdyacencia.remove(indice);
             numVertices--;
             for (NodoGrafo nodo : listaAdyacencia) {
-                nodo.getAdyacentes().removeIf(n -> n.getId().equals(nombreVertice));
+                nodo.getAdyacentes().removeIf(n -> n.getDestino().equals(nombreVertice));
             }
             throw new Exception("Ciudad eliminada correctamente");
         } catch (Exception e) {
@@ -119,8 +119,8 @@ public class GrafoNoDirigido {
             }
 
             if (buscarCamino(origen, destino) == 1) {
-                listaAdyacencia.get(indiceOrigen).getAdyacentes().removeIf(nodo -> nodo.getId().equals(destino));
-                listaAdyacencia.get(indiceDestino).getAdyacentes().removeIf(nodo -> nodo.getId().equals(origen));
+                listaAdyacencia.get(indiceOrigen).getAdyacentes().removeIf(nodo -> nodo.getDestino().equals(destino));
+                listaAdyacencia.get(indiceDestino).getAdyacentes().removeIf(nodo -> nodo.getDestino().equals(origen));
                 throw new Exception("Ruta eliminada correctamente");
             } else {
                 throw new Exception("Error: La ruta no existe");
@@ -144,7 +144,7 @@ public class GrafoNoDirigido {
         }
     }
 
-    public void dfs(String verticeInicio) throws Exception {
+    private void dfs(String verticeInicio) throws Exception {
         boolean[] visitado = new boolean[numVertices];
         Stack<String> stack = new Stack<>();
         stack.push(verticeInicio);
@@ -164,15 +164,15 @@ public class GrafoNoDirigido {
                 System.out.print(vertice + " ");
 
                 for (NodoGrafo nodo : listaAdyacencia.get(indiceVertice).getAdyacentes()) {
-                    if (!visitado[buscarIndice(nodo.getId())]) {
-                        stack.push(nodo.getId());
+                    if (!visitado[buscarIndice(nodo.getDestino())]) {
+                        stack.push(nodo.getDestino());
                     }
                 }
             }
         }
     }
 
-    public void bfs(String verticeInicio) throws Exception {
+    private void bfs(String verticeInicio) throws Exception {
         boolean[] visitado = new boolean[numVertices];
         Queue<String> queue = new LinkedList<>();
         queue.add(verticeInicio);
@@ -191,12 +191,17 @@ public class GrafoNoDirigido {
                 System.out.print(vertice + " ");
 
                 for (NodoGrafo nodo : listaAdyacencia.get(indiceVertice).getAdyacentes()) {
-                    if (!visitado[buscarIndice(nodo.getId())]) {
-                        queue.add(nodo.getId());
+                    if (!visitado[buscarIndice(nodo.getDestino())]) {
+                        queue.add(nodo.getDestino());
                     }
                 }
             }
         }
     }
+}
 
+class Exception extends java.lang.Exception {
+    public Exception(String message) {
+        super(message);
+    }
 }
