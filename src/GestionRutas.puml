@@ -1,0 +1,5 @@
+@startuml GestionRutas
+class ArbolBinario{
+    
+}
+@enduml

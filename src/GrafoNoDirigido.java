@@ -46,20 +46,42 @@ public class GrafoNoDirigido {
         return -1; // Vertice no encontrado
     }
 
+    public int buscarCamino(String origen, String destino) {
+        int indiceOrigen = buscarIndice(origen);
+        int indiceDestino = buscarIndice(destino);
+
+        if (indiceOrigen == -1 || indiceDestino == -1) {
+            return -1;
+        }
+
+        for (NodoGrafo nodo : listaAdyacencia.get(indiceOrigen).getAdyacentes()) {
+            if (nodo.getId().equals(destino)) {
+                return 1;
+            }
+        }
+
+        return 0;
+    }
+
     public void agregarArista(String origen, String destino) {
         try {
             int indiceOrigen = buscarIndice(origen);
             int indiceDestino = buscarIndice(destino);
 
-            if (indiceOrigen == -1 || indiceDestino == -1) {
+            if (buscarCamino(origen, destino) == -1) {
                 throw new Exception("No se encontró una o ambas ciudades.");
             }
 
-            listaAdyacencia.get(indiceOrigen).getAdyacentes().add(new NodoGrafo(destino, null));
-            listaAdyacencia.get(indiceDestino).getAdyacentes().add(new NodoGrafo(origen, null)); // Para grafos no
-                                                                                                 // dirigidos
+            if (buscarCamino(origen, destino) == 0) {
 
-            throw new Exception("Ruta agregada correctamente");
+                listaAdyacencia.get(indiceOrigen).getAdyacentes().add(new NodoGrafo(destino, null));
+                listaAdyacencia.get(indiceDestino).getAdyacentes().add(new NodoGrafo(origen, null));
+
+                throw new Exception("Ruta agregada correctamente");
+            } else {
+                throw new Exception("Error: La ruta ya existe");
+            }
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         } finally {
@@ -92,13 +114,18 @@ public class GrafoNoDirigido {
             int indiceOrigen = buscarIndice(origen);
             int indiceDestino = buscarIndice(destino);
 
-            if (indiceOrigen == -1 || indiceDestino == -1) {
+            if (buscarCamino(origen, destino) == -1) {
                 throw new Exception("No se encontró una o ambas ciudades.");
             }
 
-            listaAdyacencia.get(indiceOrigen).getAdyacentes().removeIf(nodo -> nodo.getId().equals(destino));
-            listaAdyacencia.get(indiceDestino).getAdyacentes().removeIf(nodo -> nodo.getId().equals(origen));
-            throw new Exception("Ruta eliminada correctamente");
+            if (buscarCamino(origen, destino) == 1) {
+                listaAdyacencia.get(indiceOrigen).getAdyacentes().removeIf(nodo -> nodo.getId().equals(destino));
+                listaAdyacencia.get(indiceDestino).getAdyacentes().removeIf(nodo -> nodo.getId().equals(origen));
+                throw new Exception("Ruta eliminada correctamente");
+            } else {
+                throw new Exception("Error: La ruta no existe");
+            }
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         } finally {
@@ -111,16 +138,22 @@ public class GrafoNoDirigido {
             bfs(verticeInicio); // Asume que bfs ahora lanza la excepción
             dfs(verticeInicio); // Ya está configurado para lanzar la excepción
         } catch (Exception e) {
-            System.out.println("Error al realizar los recorridos" + e.getMessage());
+            System.out.println("Error al realizar los recorridos: " + e.getMessage());
         } finally {
             System.out.println("\nRegresando al menú principal...");
         }
     }
 
-    public void dfs(String verticeInicio) {
+    public void dfs(String verticeInicio) throws Exception {
         boolean[] visitado = new boolean[numVertices];
         Stack<String> stack = new Stack<>();
         stack.push(verticeInicio);
+
+        if (buscarIndice(verticeInicio) == -1) {
+            throw new Exception("No se encontró el vértice de inicio " + verticeInicio + " en el grafo.");
+        }
+
+        System.out.println("\nRecorrido DFS desde el origen " + verticeInicio + ":");
 
         while (!stack.isEmpty()) {
             String vertice = stack.pop();
@@ -139,11 +172,16 @@ public class GrafoNoDirigido {
         }
     }
 
-    public void bfs(String verticeInicio) {
+    public void bfs(String verticeInicio) throws Exception {
         boolean[] visitado = new boolean[numVertices];
         Queue<String> queue = new LinkedList<>();
         queue.add(verticeInicio);
 
+        if (buscarIndice(verticeInicio) == -1) {
+            throw new Exception("No se encontró el vértice de inicio " + verticeInicio + " en el grafo.");
+        }
+
+        System.out.println("\nRecorrido BFS desde el origen " + verticeInicio + ":");
         while (!queue.isEmpty()) {
             String vertice = queue.poll();
             int indiceVertice = buscarIndice(vertice);

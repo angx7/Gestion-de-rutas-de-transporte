@@ -11,6 +11,14 @@ public class GestionRutas {
         System.out.println("Menú de Gestion de Rutas de Transporte: ");
         int opcion = 0;
 
+        grafo.agregarVertice("Leon");
+        grafo.agregarVertice("Acapulco");
+        grafo.agregarVertice("Monterrey");
+        arbol.insertar("Leon");
+        arbol.insertar("Acapulco");
+        arbol.insertar("Monterrey");
+
+
         do {
             mostrarMenu();
             try {
